@@ -155,7 +155,7 @@ const MagazinPage = () => {
                     mobileScrollSupport={true}
                     onFlip={onPage}
                     onInit={onInit}
-                    className={`${page > 0 && "mx-auto"} ${page + 1 === totalPage && "ml-[430px]"}`}
+                    className={`${page > 0 && "mx-auto"} ${page + 1 === totalPage && "md:ml-[430px]"}`}
                     ref={flipBook}
                 // autoCenter={true}
                 >
