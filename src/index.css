@@ -3,25 +3,35 @@
 @tailwind utilities;
 
 
+@layer base{
+    :root {
+         --background-color-primary: #247caf;
+         /* --background-color-secondary: #bf9038;  */
+         /* --background-color-secondary: #c7a55e;  */
+         --background-color-secondary: #98abd3; 
+         --background-color-custom: #F9FBE7; 
 
-/* body, html {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+         --text-color-primary: #000000;
+         --text-color-secondary: #C07F00;
+         --text-header-primary: #C07F00;
+         --text-header-secondary: #ffffff;
+         /* --text-header-color: #CCA531; */
+         --text-color: #C07F00;
+
+        --border-color: #d6be8a;
+        /* --text-color-secondary: #090a0a; */
+        /* --text-color: #254161; */
+        --button-color: #c7a55e;
+        --button-hover-color: #eeea8c;
+        --button-hover-ring: #faf7a3;
+    }
 }
-.magazin-container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f0f0f0;
+
+@layer components{
+    .active{
+        @apply text-color-secondary
+    }
+    .inactive{
+        @apply text-color-primary
+    }
 }
-.magazin-content {
-    width: 90%;
-    height: 90%;
-    background-color: white;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-} */

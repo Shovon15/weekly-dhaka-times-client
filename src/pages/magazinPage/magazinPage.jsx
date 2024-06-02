@@ -6,22 +6,15 @@ import { Button } from "@material-tailwind/react";
 import { MdOutlineArrowBack, MdOutlineArrowForward } from "react-icons/md";
 import { LuArrowLeftToLine, LuArrowRightToLine } from "react-icons/lu";
 
+import "./magazinPage.css"
 const MagazinData = [
     {
         image:
-            "https://res.cloudinary.com/dreeqkcfb/image/upload/v1717221206/1_dhdl2r.jpg",
+            "https://res.cloudinary.com/dreeqkcfb/image/upload/v1717316169/5_ieb47e.jpg",
     },
     {
         image:
-            "https://res.cloudinary.com/dreeqkcfb/image/upload/v1717221206/2_jiadtt.jpg",
-    },
-    {
-        image:
-            "https://res.cloudinary.com/dreeqkcfb/image/upload/v1717221206/1_dhdl2r.jpg",
-    },
-    {
-        image:
-            "https://res.cloudinary.com/dreeqkcfb/image/upload/v1717221206/2_jiadtt.jpg",
+            "https://res.cloudinary.com/dreeqkcfb/image/upload/v1717316169/3_krw73e.jpg",
     },
     {
         image:
@@ -49,12 +42,20 @@ const MagazinData = [
     },
     {
         image:
-            "https://res.cloudinary.com/dreeqkcfb/image/upload/v1717221206/1_dhdl2r.jpg",
+            "https://res.cloudinary.com/dreeqkcfb/image/upload/v1717316169/6_jbm90x.jpg",
     },
     {
         image:
-            "https://res.cloudinary.com/dreeqkcfb/image/upload/v1717221206/2_jiadtt.jpg",
+            "https://res.cloudinary.com/dreeqkcfb/image/upload/v1717316169/4_ur3mwz.jpg",
     },
+    {
+        image:
+            "https://res.cloudinary.com/dreeqkcfb/image/upload/v1717316169/5_ieb47e.jpg",
+    },
+    {
+        image:
+            "https://res.cloudinary.com/dreeqkcfb/image/upload/v1717316169/3_krw73e.jpg",
+    }
 ];
 
 
@@ -74,7 +75,8 @@ const MagazinData = [
 const MagazinPage = () => {
     const [page, setPage] = useState(0);
     const [totalPage, setTotalPage] = useState(0);
-    console.log(totalPage, "total")
+    const [currentPage, setCurrentPage] = useState(0);
+    console.log(page, "currentPage")
     const flipBook = useRef(null);
 
     const prevButtonClick = useCallback(() => {
@@ -89,6 +91,7 @@ const MagazinPage = () => {
         }
     }, []);
     const jumpIntoPage = useCallback((pageNumber) => {
+        // console.log(pageNumber, "pageNumber")
         if (flipBook.current) {
             flipBook.current.pageFlip().flip(pageNumber);
         }
@@ -97,13 +100,14 @@ const MagazinPage = () => {
 
     const onPage = useCallback((e) => {
         setPage(e.data);
-        console.log(e.data)
+        console.log(e, "e")
     }, []);
 
-    const onInit = useCallback(() => {
-        console.log(flipBook, "flipbook")
+    const onInit = useCallback((e) => {
+        // console.log('Current page: ' + e.data);
         if (flipBook.current) {
             setTotalPage(flipBook.current.pageFlip().getPageCount());
+            setCurrentPage(flipBook.current.pageFlip().getCurrentPageIndex());
         }
     }, []);
 
@@ -111,19 +115,30 @@ const MagazinPage = () => {
         <div className="bg-gray-600 overflow-hidden">
             <div className="max-w-7xl mx-auto w-[100%] h-[100%]">
                 <div className="bg-gray-800 h-20 rounded-md flex justify-center items-center gap-4">
-                    <Button variant="text" onClick={() => jumpIntoPage(1)}>
+                    <Button variant="text" className="p-2" onClick={() => jumpIntoPage(0)}>
                         <LuArrowLeftToLine className="w-5 h-5 text-white" />
                     </Button>
-                    <Button variant="text" onClick={prevButtonClick}>
+                    <Button variant="text" className="p-2" onClick={prevButtonClick}>
                         <MdOutlineArrowBack className="w-5 h-5 text-white" />
                     </Button>
-                    <div className="bg-white rounded-md p-2">
-                        <span >{page}</span> / <span>{totalPage}</span>
+                    <div className="bg-white md:hidden rounded-md p-2">
+
+                        <span>{page + 1}</span>
+
+                        {" "}/ <span>{totalPage}</span>
                     </div>
-                    <Button variant="text" onClick={nextButtonClick}>
+                    <div className="bg-white hidden md:block rounded-md p-2">
+                        {page === 0 ? (
+                            <span>{page + 1}</span>
+                        ) : (
+                            <span>{page + 1} {(page + 1) < totalPage && `- ${page + 2}`}</span>
+                        )}
+                        {" "}/ <span>{totalPage}</span>
+                    </div>
+                    <Button variant="text" className="p-2" onClick={nextButtonClick}>
                         <MdOutlineArrowForward className="w-5 h-5 text-white" />
                     </Button>
-                    <Button variant="text" onClick={() => jumpIntoPage(totalPage - 1)}>
+                    <Button variant="text" className="p-2" onClick={() => jumpIntoPage(totalPage - 1)}>
                         <LuArrowRightToLine className="w-5 h-5 text-white" />
                     </Button>
                 </div>
@@ -131,20 +146,21 @@ const MagazinPage = () => {
                     minWidth={200}
                     minHeight={300}
                     width={300}
-                    height={435}
-                    size="stretch"
+                    height={400}
                     maxWidth={400}
                     maxHeight={400}
-                    maxShadowOpacity={0.5}
+                    size="stretch"
+                    maxShadowOpacity={0.3}
                     showCover={true}
                     mobileScrollSupport={true}
                     onFlip={onPage}
                     onInit={onInit}
-                    className="mx-auto"
+                    className={`${page > 0 && "mx-auto"} ${page + 1 === totalPage && "ml-[430px]"}`}
                     ref={flipBook}
+                // autoCenter={true}
                 >
                     {MagazinData.map((page, index) => (
-                        <div key={index} className="">
+                        <div key={index} className={index % 2 !== 1 ? 'img-shadow' : ''}>
                             <img src={page.image} alt={`Page ${index + 1}`} />
                         </div>
                     ))}
