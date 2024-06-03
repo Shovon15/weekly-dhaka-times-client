@@ -3,11 +3,11 @@ import { Outlet } from "react-router-dom";
 
 const Main = () => {
 	return (
-		<div className="w-full">
-			<div className="w-full h-full">
-				<Outlet />
-			</div>
+
+		<div className="">
+			<Outlet />
 		</div>
+
 	);
 };
 

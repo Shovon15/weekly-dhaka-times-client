@@ -1,12 +1,10 @@
-/* eslint-disable react/display-name */
-/* eslint-disable react/prop-types */
-import HTMLFlipBook from "react-pageflip";
-import { useState, useRef, useCallback } from "react";
-import { Button } from "@material-tailwind/react";
-import { MdOutlineArrowBack, MdOutlineArrowForward } from "react-icons/md";
-import { LuArrowLeftToLine, LuArrowRightToLine } from "react-icons/lu";
+import { useCallback, useRef, useState } from "react";
 
-import "./magazinPage.css"
+import HTMLFlipBook from "react-pageflip";
+
+// import "./magazinPage.css";
+import MagazinPageWrapper from "./magazinPageWrapper";
+import { TransformComponent, TransformWrapper, useControls } from "react-zoom-pan-pinch";
 const MagazinData = [
     {
         image:
@@ -55,30 +53,30 @@ const MagazinData = [
     {
         image:
             "https://res.cloudinary.com/dreeqkcfb/image/upload/v1717316169/3_krw73e.jpg",
-    }
+    },
 ];
-
-
-// const Page = React.forwardRef((props, ref) => {
-//     return (
-//         <div className="page" ref={ref}>
-//             <div className="page-content">
-//                 <h2 className="page-header">Page header - {props.number}</h2>
-//                 <div className="page-image"></div>
-//                 <div className="page-text">{props.children}</div>
-//                 <div className="page-footer">{props.number + 1}</div>
-//             </div>
-//         </div>
-//     );
-// });
 
 const MagazinPage = () => {
     const [page, setPage] = useState(0);
     const [totalPage, setTotalPage] = useState(0);
     const [currentPage, setCurrentPage] = useState(0);
-    console.log(page, "currentPage")
+    console.log(currentPage, "currentPage")
     const flipBook = useRef(null);
+    // const appRef = useRef(null);
 
+    const Controls = () => {
+        const { zoomIn, zoomOut, resetTransform } = useControls();
+
+        return (
+            <div className="fixed top-0 left-1/2">
+                <button onClick={() => zoomIn()}>zoom in +</button>
+                <button onClick={() => zoomOut()}>zoom out -</button>
+                <button onClick={() => resetTransform()}> reset x</button>
+            </div>
+        );
+    };
+
+    // -----------------------------------------
     const prevButtonClick = useCallback(() => {
         if (flipBook.current) {
             flipBook.current.pageFlip().flipPrev();
@@ -97,12 +95,12 @@ const MagazinPage = () => {
         }
     }, []);
 
-
     const onPage = useCallback((e) => {
         setPage(e.data);
-        console.log(e, "e")
+        console.log(e, "e");
     }, []);
 
+    // eslint-disable-next-line no-unused-vars
     const onInit = useCallback((e) => {
         // console.log('Current page: ' + e.data);
         if (flipBook.current) {
@@ -110,63 +108,45 @@ const MagazinPage = () => {
             setCurrentPage(flipBook.current.pageFlip().getCurrentPageIndex());
         }
     }, []);
+    // ----------------------------------------------
 
     return (
-        <div className="bg-gray-600 overflow-hidden">
-            <div className="max-w-7xl mx-auto w-[100%] h-[100%]">
-                <div className="bg-gray-800 h-20 rounded-md flex justify-center items-center gap-4">
-                    <Button variant="text" className="p-2" onClick={() => jumpIntoPage(0)}>
-                        <LuArrowLeftToLine className="w-5 h-5 text-white" />
-                    </Button>
-                    <Button variant="text" className="p-2" onClick={prevButtonClick}>
-                        <MdOutlineArrowBack className="w-5 h-5 text-white" />
-                    </Button>
-                    <div className="bg-white md:hidden rounded-md p-2">
-
-                        <span>{page + 1}</span>
-
-                        {" "}/ <span>{totalPage}</span>
+        <MagazinPageWrapper
+            page={page}
+            totalPage={totalPage}
+            prevButtonClick={prevButtonClick}
+            nextButtonClick={nextButtonClick}
+            jumpIntoPage={jumpIntoPage}
+        >
+            {/* <div className="bg-green-300 w-[1000px] h-[90vh] mx-auto">
+                hello
+            </div> */}
+            <HTMLFlipBook
+                width={315}
+                minWidth={315}
+                maxWidth={400}
+                height={430}
+                minHeight={430}
+                maxHeight={430}
+                size="stretch"
+                maxShadowOpacity={0.3}
+                showCover={true}
+                mobileScrollSupport={true}
+                onFlip={onPage}
+                onInit={onInit}
+                // className=""
+                className="border border-red-500 w-full"
+                // className={`${page > 0 && "mx-auto"} ${page + 1 === totalPage && "md:ml-[430px]"}`}
+                ref={flipBook}
+            // autoCenter={true}
+            >
+                {MagazinData.map((page, index) => (
+                    <div key={index} className={index % 2 !== 1 ? "img-shadow" : ""}>
+                        <img src={page.image} alt={`Page ${index + 1}`} />
                     </div>
-                    <div className="bg-white hidden md:block rounded-md p-2">
-                        {page === 0 ? (
-                            <span>{page + 1}</span>
-                        ) : (
-                            <span>{page + 1} {(page + 1) < totalPage && `- ${page + 2}`}</span>
-                        )}
-                        {" "}/ <span>{totalPage}</span>
-                    </div>
-                    <Button variant="text" className="p-2" onClick={nextButtonClick}>
-                        <MdOutlineArrowForward className="w-5 h-5 text-white" />
-                    </Button>
-                    <Button variant="text" className="p-2" onClick={() => jumpIntoPage(totalPage - 1)}>
-                        <LuArrowRightToLine className="w-5 h-5 text-white" />
-                    </Button>
-                </div>
-                <HTMLFlipBook
-                    minWidth={200}
-                    minHeight={300}
-                    width={300}
-                    height={400}
-                    maxWidth={400}
-                    maxHeight={400}
-                    size="stretch"
-                    maxShadowOpacity={0.3}
-                    showCover={true}
-                    mobileScrollSupport={true}
-                    onFlip={onPage}
-                    onInit={onInit}
-                    className={`${page > 0 && "mx-auto"} ${page + 1 === totalPage && "md:ml-[430px]"}`}
-                    ref={flipBook}
-                // autoCenter={true}
-                >
-                    {MagazinData.map((page, index) => (
-                        <div key={index} className={index % 2 !== 1 ? 'img-shadow' : ''}>
-                            <img src={page.image} alt={`Page ${index + 1}`} />
-                        </div>
-                    ))}
-                </HTMLFlipBook>
-            </div>
-        </div>
+                ))}
+            </HTMLFlipBook>
+        </MagazinPageWrapper >
     );
 };
 
