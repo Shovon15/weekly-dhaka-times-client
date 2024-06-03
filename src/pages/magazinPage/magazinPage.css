@@ -1,19 +1,7 @@
-.magazin-container{
-    /* h-full flex flex-col justify-center items-center border border-blue-500 overflow-hidden */
-    display: flex;
-    
-    height: 100vh; /* Or any specific height */
-    width: 100vw; /* Or any specific width */
-    border: 1px solid rgb(206, 12, 190); /* Just to visualize the parent container */
-    
+.img-shadow-left{
+    box-shadow: -15px 0 10px -3px rgb(82, 81, 79);
 }
 
-.flip-contain{
-display: flex;
-justify-content: center;
-    align-items: center;
-}
-
-.img-shadow{
-    box-shadow: -15px 0 10px -5px rgb(77, 76, 75);
+.img-shadow-right{
+    box-shadow: 0px 0 -10px -3px rgb(82, 81, 79);
 }

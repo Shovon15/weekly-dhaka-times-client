@@ -1,6 +1,19 @@
 import toast from "react-hot-toast";
 
 
+export function showMagazinToast(message) {
+	toast(message,
+		{
+			icon: '',
+			position: "bottom-center",
+			style: {
+				borderRadius: '10px',
+				background: '#333',
+				color: '#fff',
+			},
+		}
+	);
+}
 export function showErrorToast(message) {
 	toast.error(message, {
 		position: "top-right",

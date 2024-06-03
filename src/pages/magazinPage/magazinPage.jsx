@@ -2,9 +2,10 @@ import { useCallback, useRef, useState } from "react";
 
 import HTMLFlipBook from "react-pageflip";
 
-// import "./magazinPage.css";
+import "./magazinPage.css";
 import MagazinPageWrapper from "./magazinPageWrapper";
-import { TransformComponent, TransformWrapper, useControls } from "react-zoom-pan-pinch";
+import { showMagazinToast } from "../../helper/ToastMessage";
+// import { TransformComponent, TransformWrapper, useControls } from "react-zoom-pan-pinch";
 const MagazinData = [
     {
         image:
@@ -60,32 +61,41 @@ const MagazinPage = () => {
     const [page, setPage] = useState(0);
     const [totalPage, setTotalPage] = useState(0);
     const [currentPage, setCurrentPage] = useState(0);
-    console.log(currentPage, "currentPage")
+    console.log(page, "page |", totalPage, "totalPage|", currentPage, "currentPage|");
     const flipBook = useRef(null);
     // const appRef = useRef(null);
 
-    const Controls = () => {
-        const { zoomIn, zoomOut, resetTransform } = useControls();
+    // const Controls = () => {
+    //     const { zoomIn, zoomOut, resetTransform } = useControls();
 
-        return (
-            <div className="fixed top-0 left-1/2">
-                <button onClick={() => zoomIn()}>zoom in +</button>
-                <button onClick={() => zoomOut()}>zoom out -</button>
-                <button onClick={() => resetTransform()}> reset x</button>
-            </div>
-        );
-    };
+    //     return (
+    //         <div className="fixed top-0 left-1/2">
+    //             <button onClick={() => zoomIn()}>zoom in +</button>
+    //             <button onClick={() => zoomOut()}>zoom out -</button>
+    //             <button onClick={() => resetTransform()}> reset x</button>
+    //         </div>
+    //     );
+    // };
 
     // -----------------------------------------
     const prevButtonClick = useCallback(() => {
         if (flipBook.current) {
-            flipBook.current.pageFlip().flipPrev();
+            if (page > 0) {
+                flipBook.current.pageFlip().flipPrev();
+            } else {
+                showMagazinToast("This is the first page");
+            }
         }
-    }, []);
+    }, [page]);
 
     const nextButtonClick = useCallback(() => {
         if (flipBook.current) {
-            flipBook.current.pageFlip().flipNext();
+
+            if (page === totalPage) {
+                flipBook.current.pageFlip().flipNext();
+            } else {
+                showMagazinToast("This is the last page.");
+            }
         }
     }, []);
     const jumpIntoPage = useCallback((pageNumber) => {
@@ -118,9 +128,6 @@ const MagazinPage = () => {
             nextButtonClick={nextButtonClick}
             jumpIntoPage={jumpIntoPage}
         >
-            {/* <div className="bg-green-300 w-[1000px] h-[90vh] mx-auto">
-                hello
-            </div> */}
             <HTMLFlipBook
                 width={315}
                 minWidth={315}
@@ -135,18 +142,18 @@ const MagazinPage = () => {
                 onFlip={onPage}
                 onInit={onInit}
                 // className=""
-                className="border border-red-500 w-full"
+                className="w-full"
                 // className={`${page > 0 && "mx-auto"} ${page + 1 === totalPage && "md:ml-[430px]"}`}
                 ref={flipBook}
             // autoCenter={true}
             >
                 {MagazinData.map((page, index) => (
-                    <div key={index} className={index % 2 !== 1 ? "img-shadow" : ""}>
+                    <div key={index} className={index % 2 !== 1 ? "img-shadow-left" : "img-shadow-right"}>
                         <img src={page.image} alt={`Page ${index + 1}`} />
                     </div>
                 ))}
             </HTMLFlipBook>
-        </MagazinPageWrapper >
+        </MagazinPageWrapper>
     );
 };
 
